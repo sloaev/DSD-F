@@ -1,0 +1,99 @@
+<!-- dialog-box.component.html -->
+<h1 mat-dialog-title>Управление записью :
+  <strong>{{action != 'Delete' ? action === 'Add' ? 'Добавление' : 'Изменение' : 'Удаление'}}</strong></h1>
+<div mat-dialog-content>
+  <mat-form-field style="width: 1000px" *ngIf="action != 'Delete'; else elseTemplate">
+    <input placeholder="{{action}} ФИО" matInput [(ngModel)]="local_data.fio">
+  </mat-form-field>
+  <mat-form-field style="width: 1000px" *ngIf="action != 'Delete'">
+    <input placeholder="{{action}} Адрес" matInput [(ngModel)]="local_data.address">
+  </mat-form-field>
+  <mat-form-field style="width: 1000px" *ngIf="action != 'Delete'">
+    <mat-label>Дата рождения</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="local_data.birthDate">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <form style="width: 1000px" *ngIf="action != 'Delete'" class="container mt-3">
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <button mat-button style="cursor: pointer" (click)="addPhone()">Добавить телефон</button>
+        <section class="container border mb-4 p-3" *ngFor="let phone of phones; let i = index;">
+          <div class="row">
+            <div class="col-6 text-right">
+              <button mat-button style="cursor: pointer" mat-flat-button (click)="removePhone(i)">Удалить телефон
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <input type="text" class="mat-input-element" [(ngModel)]="phone.number" name="number_{{getUnique()}}"
+                       placeholder="Номер"/>
+              </div>
+            </div>
+          </div>
+          <div class="row"></div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label>Статус номера</label>
+                <select class="mat-action-list" [(ngModel)]="phone.preferred" name="preferred_{{getUnique()}}">
+                  <option value="true">Предпочтительный</option>
+                  <option value="false">Обычный</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </form>
+  <form style="width: 1000px" *ngIf="action != 'Delete'" class="container mt-3">
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <button mat-button style="cursor: pointer" (click)="addEmail()">Добавить email</button>
+        <section class="container border mb-4 p-3" *ngFor="let email of emails; let i = index;">
+          <div class="row">
+            <div class="col-6 text-right">
+              <button mat-button style="cursor: pointer" mat-flat-button (click)="removeEmail(i)">Удалить email</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <input type="text" class="mat-input-element" [(ngModel)]="email.address" name="email_{{getUnique()}}"
+                       placeholder="Email"/>
+              </div>
+            </div>
+          </div>
+          <div class="row"></div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label>Статус email</label>
+                <select class="mat-action-list" [(ngModel)]="email.preferred" name="preferred_{{getUnique()}}">
+                  <option value="true">Предпочтительный</option>
+                  <option value="false">Обычный</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </form>
+
+  <ng-template #elseTemplate>
+    Удалить <b>{{local_data.fio}}</b>?
+  </ng-template>
+</div>
+<div mat-dialog-actions>
+  <button *ngIf="action != 'Delete'" mat-button style="cursor: pointer" mat-flat-button
+          (click)="doAction()">{{ action === 'Add' ? 'Добавить' : 'Изменить' }}</button>
+  <button *ngIf="action == 'Delete'" mat-button style="cursor: pointer" mat-flat-button color="warn"
+          (click)="doAction()">Удалить
+  </button>
+  <button mat-button style="cursor: pointer" (click)="closeDialog()" mat-flat-button>Отмена</button>
+</div>
